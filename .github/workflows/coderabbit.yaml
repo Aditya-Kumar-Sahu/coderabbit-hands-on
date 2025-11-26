@@ -27,9 +27,12 @@ jobs:
           # Standard install location is usually ~/.coderabbit/bin
           echo "$HOME/.coderabbit/bin" >> $GITHUB_PATH
 
+      - name: Create CodeRabbit Config
+        run: |
+          mkdir -p ~/.coderabbit
+          echo '{"accessToken":"${{ secrets.CODERABBIT_API_KEY }}","expiresAt":"never","provider":"github","user":{"user_id":"11ad046e-57c1-487d-beeb-861d5d67a721","user_name":"Aditya-Kumar-Sahu","name":"AdityaKumarSahu","provider_user_id":"99242571","avatar_url":"https://avatars.githubusercontent.com/u/99242571?v=4","email":"adityasahu1124@gmail.com"},"currentOrg":{"id":"090060ae-ae94-44b2-a5c2-784092dfd45e","name":"Aditya-Kumar-Sahu","provider":"github","provider_role":"cr_admin","provider_organization_id":"99242571","role":"admin","cr_role":"cr_admin"},"organizations":[{"id":"090060ae-ae94-44b2-a5c2-784092dfd45e","name":"Aditya-Kumar-Sahu","provider":"github","provider_role":"cr_admin","provider_organization_id":"99242571","role":"admin","cr_role":"cr_admin"}]}' > ~/.coderabbit/auth.json
+
       - name: Run CodeRabbit Review
-        env:
-          CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
         run: |
           # Run the review on the committed changes
           source ~/.bashrc && coderabbit review --plain --type committed --base-commit HEAD~1
