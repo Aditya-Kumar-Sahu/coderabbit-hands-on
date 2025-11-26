@@ -32,4 +32,4 @@ jobs:
           CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
         run: |
           # Run the review on the committed changes
-          coderabbit review --plain --type committed --base-commit HEAD~1
+          source ~/.bashrc && coderabbit review --plain --type committed --base-commit HEAD~1
