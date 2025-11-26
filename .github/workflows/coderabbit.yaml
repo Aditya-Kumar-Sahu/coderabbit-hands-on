@@ -3,7 +3,7 @@ name: CodeRabbit CLI Review
 on:
   push:
     branches:
-      - '**' # Triggers on push to any branch
+      - '**'
 
 jobs:
   coderabbit-review:
@@ -16,19 +16,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Required to access commit history for the diff
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+          fetch-depth: 0 # Required for diff analysis
 
       - name: Install CodeRabbit CLI
-        run: npm install -g coderabbit
+        run: |
+          # Download and install the CLI
+          curl -fsSL https://cli.coderabbit.ai/install.sh | sh
+          
+          # Add the installation path to the system PATH for this workflow run
+          # Standard install location is usually ~/.coderabbit/bin
+          echo "$HOME/.coderabbit/bin" >> $GITHUB_PATH
 
       - name: Run CodeRabbit Review
         env:
           CODERABBIT_API_KEY: ${{ secrets.CODERABBIT_API_KEY }}
-        # Reviews the changes in the latest commit (HEAD) compared to the previous one (HEAD~1)
         run: |
+          # Run the review on the committed changes
           coderabbit review --plain --type committed --base-commit HEAD~1
